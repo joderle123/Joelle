@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>En Pleine Forme - Une journée de bien-être</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #e74c3c;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 span {
+            color: #3498db;
+        }
+
+        .subtitle {
+            color: #2ecc71;
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+
+        .cycle-badge {
+            display: inline-block;
+            background: #e74c3c;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        /* Navigation */
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .nav-tab {
+            padding: 15px 25px;
+            background: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            color: #333;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-tab:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+        }
+
+        .nav-tab.active:nth-child(2) {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        }
+
+        .nav-tab.active:nth-child(3) {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        }
+
+        .nav-tab.active:nth-child(4) {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        }
+
+        .nav-tab.active:nth-child(5) {
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+        }
+
+        /* Activity Sections */
+        .activity-section {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.5s ease;
+        }
+
+        .activity-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #e74c3c;
+        }
+
+        .instructions {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border-left: 5px solid #3498db;
+            font-size: 1.1em;
+            color: #555;
+        }
+
+        /* Body Parts Activity */
+        .body-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+            align-items: flex-start;
+        }
+
+        .body-figure {
+            position: relative;
+            width: 300px;
+            height: 500px;
+        }
+
+        .body-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .body-part {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .body-part:hover {
+            filter: brightness(1.2);
+            transform: scale(1.05);
+        }
+
+        .body-part.selected {
+            filter: drop-shadow(0 0 10px #e74c3c);
+        }
+
+        .word-display {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            min-width: 250px;
+        }
+
+        .word-display h3 {
+            color: white;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .word-display p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2em;
+        }
+
+        .body-parts-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .body-part-btn {
+            padding: 12px 15px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .body-part-btn:hover {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+
+        .body-part-btn.correct {
+            background: #2ecc71;
+            color: white;
+            border-color: #2ecc71;
+        }
+
+        /* Senses Activity */
+        .senses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .sense-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 3px solid transparent;
+        }
+
+        .sense-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .sense-card.selected {
+            border-color: #e74c3c;
+            background: #ffeaa7;
+        }
+
+        .sense-card.correct {
+            border-color: #2ecc71;
+            background: #d5f4e6;
+        }
+
+        .sense-card.wrong {
+            border-color: #e74c3c;
+            background: #fadbd8;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .sense-icon {
+            font-size: 4em;
+            margin-bottom: 15px;
+        }
+
+        .sense-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .sense-description {
+            color: #666;
+            margin-top: 10px;
+            font-size: 0.95em;
+        }
+
+        /* Quiz Activity */
+        .quiz-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .quiz-question {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .quiz-question h3 {
+            font-size: 1.3em;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 12px;
+        }
+
+        .quiz-option {
+            padding: 15px 20px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .quiz-option:hover {
+            border-color: #3498db;
+            background: #ebf5fb;
+        }
+
+        .quiz-option.correct {
+            background: #2ecc71;
+            color: white;
+            border-color: #2ecc71;
+        }
+
+        .quiz-option.wrong {
+            background: #e74c3c;
+            color: white;
+            border-color: #e74c3c;
+        }
+
+        .quiz-option.disabled {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .quiz-progress {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .progress-dot {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #ddd;
+            transition: all 0.3s ease;
+        }
+
+        .progress-dot.current {
+            background: #3498db;
+            transform: scale(1.2);
+        }
+
+        .progress-dot.completed {
+            background: #2ecc71;
+        }
+
+        .progress-dot.wrong-answer {
+            background: #e74c3c;
+        }
+
+        /* Memory Game */
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .memory-card {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: white;
+            transition: all 0.3s ease;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .memory-card:hover {
+            transform: scale(1.05);
+        }
+
+        .memory-card.flipped {
+            background: white;
+            color: #333;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .memory-card.matched {
+            background: #2ecc71;
+            color: white;
+            pointer-events: none;
+        }
+
+        .memory-card .card-front {
+            display: none;
+        }
+
+        .memory-card.flipped .card-front {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .memory-card .card-back {
+            font-size: 2em;
+        }
+
+        .memory-card.flipped .card-back {
+            display: none;
+        }
+
+        .memory-card .card-emoji {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        /* Expressions Activity */
+        .expressions-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .expression-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .expression-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .expression-card h4 {
+            color: #e74c3c;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .expression-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .expression-demo {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 3em;
+        }
+
+        /* Score Display */
+        .score-display {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            border-radius: 15px;
+            color: white;
+            margin-top: 20px;
+        }
+
+        .score-display h2 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .score-display .stars {
+            font-size: 2.5em;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-container {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        /* Stats */
+        .game-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            background: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .nav-tab {
+                padding: 10px 15px;
+                font-size: 0.9em;
+            }
+
+            .memory-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .body-container {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        /* Confetti Animation */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #f00;
+            animation: confetti-fall 3s ease-out forwards;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Speech bubble for feedback */
+        .feedback-bubble {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            z-index: 1000;
+            animation: popIn 0.5s ease;
+        }
+
+        @keyframes popIn {
+            0% { transform: translate(-50%, -50%) scale(0); }
+            70% { transform: translate(-50%, -50%) scale(1.1); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .feedback-bubble h2 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .feedback-bubble .emoji {
+            font-size: 4em;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Salut, c'est <span>Magique!</span></h1>
+            <p class="subtitle">Une journée de bien-être</p>
+            <span class="cycle-badge">CYCLE 3</span>
+        </header>
+
+        <!-- Navigation -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-tab="body">Le Corps</button>
+            <button class="nav-tab" data-tab="senses">Les 5 Sens</button>
+            <button class="nav-tab" data-tab="quiz">Quiz</button>
+            <button class="nav-tab" data-tab="memory">Jeu de Mémoire</button>
+            <button class="nav-tab" data-tab="expressions">Expressions</button>
+        </div>
+
+        <!-- Body Parts Activity -->
+        <section id="body" class="activity-section active">
+            <h2 class="section-title">Les Parties du Corps</h2>
+            <p class="instructions">Clique sur les boutons pour découvrir les parties du corps. Apprends le vocabulaire en français!</p>
+
+            <div class="body-container">
+                <div class="body-figure">
+                    <svg class="body-svg" viewBox="0 0 200 400" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Head -->
+                        <ellipse cx="100" cy="45" rx="35" ry="40" fill="#FDBF6F" class="body-part" data-part="la tête"/>
+                        <!-- Hair -->
+                        <path d="M65 35 Q100 5 135 35 Q140 20 130 15 Q100 -5 70 15 Q60 20 65 35" fill="#5D4037" class="body-part" data-part="les cheveux"/>
+                        <!-- Eyes -->
+                        <ellipse cx="85" cy="40" rx="8" ry="5" fill="white"/>
+                        <ellipse cx="115" cy="40" rx="8" ry="5" fill="white"/>
+                        <circle cx="85" cy="40" r="3" fill="#333" class="body-part" data-part="les yeux"/>
+                        <circle cx="115" cy="40" r="3" fill="#333" class="body-part" data-part="les yeux"/>
+                        <!-- Nose -->
+                        <path d="M100 45 L95 55 L105 55 Z" fill="#E8A87C" class="body-part" data-part="le nez"/>
+                        <!-- Mouth -->
+                        <path d="M90 65 Q100 72 110 65" stroke="#C0392B" stroke-width="3" fill="none" class="body-part" data-part="la bouche"/>
+                        <!-- Ears -->
+                        <ellipse cx="63" cy="45" rx="5" ry="10" fill="#FDBF6F" class="body-part" data-part="les oreilles"/>
+                        <ellipse cx="137" cy="45" rx="5" ry="10" fill="#FDBF6F" class="body-part" data-part="les oreilles"/>
+                        <!-- Neck -->
+                        <rect x="90" y="80" width="20" height="25" fill="#FDBF6F" class="body-part" data-part="le cou"/>
+                        <!-- Body/Torso -->
+                        <path d="M60 105 L60 200 L140 200 L140 105 Q120 95 100 95 Q80 95 60 105" fill="#3498DB" class="body-part" data-part="la poitrine"/>
+                        <!-- Belly -->
+                        <ellipse cx="100" cy="180" rx="30" ry="20" fill="#2980B9" class="body-part" data-part="le ventre"/>
+                        <!-- Shoulders -->
+                        <ellipse cx="55" cy="115" rx="15" ry="12" fill="#3498DB" class="body-part" data-part="les épaules"/>
+                        <ellipse cx="145" cy="115" rx="15" ry="12" fill="#3498DB" class="body-part" data-part="les épaules"/>
+                        <!-- Arms -->
+                        <rect x="25" y="115" width="25" height="70" rx="10" fill="#FDBF6F" class="body-part" data-part="le bras"/>
+                        <rect x="150" y="115" width="25" height="70" rx="10" fill="#FDBF6F" class="body-part" data-part="le bras"/>
+                        <!-- Elbows -->
+                        <circle cx="37" cy="160" r="8" fill="#E8A87C" class="body-part" data-part="le coude"/>
+                        <circle cx="163" cy="160" r="8" fill="#E8A87C" class="body-part" data-part="le coude"/>
+                        <!-- Hands -->
+                        <ellipse cx="37" cy="200" rx="12" ry="15" fill="#FDBF6F" class="body-part" data-part="la main"/>
+                        <ellipse cx="163" cy="200" rx="12" ry="15" fill="#FDBF6F" class="body-part" data-part="la main"/>
+                        <!-- Fingers -->
+                        <rect x="25" y="210" width="5" height="15" rx="2" fill="#FDBF6F" class="body-part" data-part="les doigts"/>
+                        <rect x="32" y="212" width="5" height="17" rx="2" fill="#FDBF6F" class="body-part" data-part="les doigts"/>
+                        <rect x="39" y="210" width="5" height="15" rx="2" fill="#FDBF6F" class="body-part" data-part="les doigts"/>
+                        <rect x="155" y="210" width="5" height="15" rx="2" fill="#FDBF6F" class="body-part" data-part="les doigts"/>
+                        <rect x="162" y="212" width="5" height="17" rx="2" fill="#FDBF6F" class="body-part" data-part="les doigts"/>
+                        <rect x="169" y="210" width="5" height="15" rx="2" fill="#FDBF6F" class="body-part" data-part="les doigts"/>
+                        <!-- Legs -->
+                        <rect x="65" y="200" width="30" height="100" rx="10" fill="#2C3E50" class="body-part" data-part="la jambe"/>
+                        <rect x="105" y="200" width="30" height="100" rx="10" fill="#2C3E50" class="body-part" data-part="la jambe"/>
+                        <!-- Knees -->
+                        <ellipse cx="80" cy="260" rx="12" ry="10" fill="#34495E" class="body-part" data-part="le genou"/>
+                        <ellipse cx="120" cy="260" rx="12" ry="10" fill="#34495E" class="body-part" data-part="le genou"/>
+                        <!-- Feet -->
+                        <ellipse cx="75" cy="310" rx="18" ry="12" fill="#8B4513" class="body-part" data-part="le pied"/>
+                        <ellipse cx="125" cy="310" rx="18" ry="12" fill="#8B4513" class="body-part" data-part="le pied"/>
+                    </svg>
+                </div>
+
+                <div class="word-display">
+                    <h3 id="body-word">Clique sur le corps!</h3>
+                    <p id="body-description">Découvre les parties du corps</p>
+                </div>
+            </div>
+
+            <div class="body-parts-list">
+                <button class="body-part-btn" data-word="la tête">la tête</button>
+                <button class="body-part-btn" data-word="les cheveux">les cheveux</button>
+                <button class="body-part-btn" data-word="les yeux">les yeux</button>
+                <button class="body-part-btn" data-word="le nez">le nez</button>
+                <button class="body-part-btn" data-word="la bouche">la bouche</button>
+                <button class="body-part-btn" data-word="les oreilles">les oreilles</button>
+                <button class="body-part-btn" data-word="le cou">le cou</button>
+                <button class="body-part-btn" data-word="les épaules">les épaules</button>
+                <button class="body-part-btn" data-word="le bras">le bras</button>
+                <button class="body-part-btn" data-word="le coude">le coude</button>
+                <button class="body-part-btn" data-word="la main">la main</button>
+                <button class="body-part-btn" data-word="les doigts">les doigts</button>
+                <button class="body-part-btn" data-word="la poitrine">la poitrine</button>
+                <button class="body-part-btn" data-word="le ventre">le ventre</button>
+                <button class="body-part-btn" data-word="la jambe">la jambe</button>
+                <button class="body-part-btn" data-word="le genou">le genou</button>
+                <button class="body-part-btn" data-word="le pied">le pied</button>
+            </div>
+        </section>
+
+        <!-- Five Senses Activity -->
+        <section id="senses" class="activity-section">
+            <h2 class="section-title">Les Cinq Sens</h2>
+            <p class="instructions">Découvre les cinq sens! Clique sur chaque carte pour apprendre comment on utilise chaque sens.</p>
+
+            <div class="game-stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="senses-score">0</div>
+                    <div class="stat-label">Points</div>
+                </div>
+            </div>
+
+            <div class="senses-grid">
+                <div class="sense-card" data-sense="voir">
+                    <div class="sense-icon">👁️</div>
+                    <div class="sense-name">VOIR</div>
+                    <div class="sense-description">Avec <strong>les yeux</strong>, je peux voir et regarder.</div>
+                </div>
+                <div class="sense-card" data-sense="entendre">
+                    <div class="sense-icon">👂</div>
+                    <div class="sense-name">ENTENDRE</div>
+                    <div class="sense-description">Avec <strong>les oreilles</strong>, je peux écouter et entendre.</div>
+                </div>
+                <div class="sense-card" data-sense="sentir">
+                    <div class="sense-icon">👃</div>
+                    <div class="sense-name">SENTIR</div>
+                    <div class="sense-description">Avec <strong>le nez</strong>, je peux sentir.</div>
+                </div>
+                <div class="sense-card" data-sense="goûter">
+                    <div class="sense-icon">👅</div>
+                    <div class="sense-name">GOÛTER</div>
+                    <div class="sense-description">Avec <strong>la langue</strong>, je peux goûter.</div>
+                </div>
+                <div class="sense-card" data-sense="toucher">
+                    <div class="sense-icon">🖐️</div>
+                    <div class="sense-name">TOUCHER</div>
+                    <div class="sense-description">Avec <strong>les mains</strong>, je peux toucher.</div>
+                </div>
+            </div>
+
+            <div class="btn-container">
+                <button class="btn btn-primary" id="start-senses-quiz">Jouer au Quiz des Sens</button>
+            </div>
+
+            <div id="senses-quiz-container" class="hidden">
+                <h3 style="text-align: center; margin: 20px 0;">Avec quelle partie du corps?</h3>
+                <div class="quiz-question">
+                    <h3 id="sense-question">Question</h3>
+                    <div class="quiz-options" id="sense-options">
+                        <!-- Options will be generated -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz Activity -->
+        <section id="quiz" class="activity-section">
+            <h2 class="section-title">Quiz - Les Parties du Corps</h2>
+            <p class="instructions">Réponds aux questions pour tester tes connaissances!</p>
+
+            <div class="quiz-container">
+                <div class="quiz-progress" id="quiz-progress">
+                    <!-- Progress dots will be generated -->
+                </div>
+
+                <div class="game-stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="quiz-score">0</div>
+                        <div class="stat-label">Bonnes réponses</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="quiz-current">1</div>
+                        <div class="stat-label">Question</div>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h3 id="quiz-question-text">Question</h3>
+                    <div class="quiz-options" id="quiz-options">
+                        <!-- Options will be generated -->
+                    </div>
+                </div>
+
+                <div class="btn-container">
+                    <button class="btn btn-primary hidden" id="next-question">Question Suivante</button>
+                    <button class="btn btn-success hidden" id="restart-quiz">Recommencer</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Memory Game -->
+        <section id="memory" class="activity-section">
+            <h2 class="section-title">Jeu de Mémoire</h2>
+            <p class="instructions">Trouve les paires! Associe chaque partie du corps avec son image.</p>
+
+            <div class="game-stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="memory-moves">0</div>
+                    <div class="stat-label">Coups</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="memory-pairs">0</div>
+                    <div class="stat-label">Paires trouvées</div>
+                </div>
+            </div>
+
+            <div class="memory-grid" id="memory-grid">
+                <!-- Cards will be generated -->
+            </div>
+
+            <div class="btn-container">
+                <button class="btn btn-primary" id="restart-memory">Nouvelle Partie</button>
+            </div>
+        </section>
+
+        <!-- Expressions Activity -->
+        <section id="expressions" class="activity-section">
+            <h2 class="section-title">Expressions avec le Corps</h2>
+            <p class="instructions">Apprends des expressions utiles avec les parties du corps!</p>
+
+            <div class="expressions-container">
+                <div class="expression-card">
+                    <h4>Se toucher les oreilles</h4>
+                    <p>Toucher ses propres oreilles avec les mains.</p>
+                    <div class="expression-demo">🙉</div>
+                </div>
+                <div class="expression-card">
+                    <h4>Se laver les mains</h4>
+                    <p>Nettoyer ses mains avec de l'eau et du savon.</p>
+                    <div class="expression-demo">🧼🖐️</div>
+                </div>
+                <div class="expression-card">
+                    <h4>Aller à pied</h4>
+                    <p>Se déplacer en marchant.</p>
+                    <div class="expression-demo">🚶</div>
+                </div>
+                <div class="expression-card">
+                    <h4>Hausser les épaules</h4>
+                    <p>Lever les épaules pour montrer qu'on ne sait pas.</p>
+                    <div class="expression-demo">🤷</div>
+                </div>
+                <div class="expression-card">
+                    <h4>Lever les bras</h4>
+                    <p>Mettre les bras en l'air.</p>
+                    <div class="expression-demo">🙌</div>
+                </div>
+                <div class="expression-card">
+                    <h4>Baisser les bras</h4>
+                    <p>Abandonner, arrêter d'essayer.</p>
+                    <div class="expression-demo">😔</div>
+                </div>
+                <div class="expression-card">
+                    <h4>Pointer du doigt</h4>
+                    <p>Montrer quelque chose avec le doigt.</p>
+                    <div class="expression-demo">👉</div>
+                </div>
+                <div class="expression-card">
+                    <h4>Plier les jambes</h4>
+                    <p>Faire une flexion avec les jambes.</p>
+                    <div class="expression-demo">🧎</div>
+                </div>
+                <div class="expression-card">
+                    <h4>Tomber sur les fesses</h4>
+                    <p>Tomber en arrière sur le derrière.</p>
+                    <div class="expression-demo">🤸</div>
+                </div>
+            </div>
+
+            <div class="btn-container">
+                <button class="btn btn-primary" id="practice-expressions">Pratique les Expressions!</button>
+            </div>
+
+            <div id="expression-practice" class="hidden" style="margin-top: 30px;">
+                <div class="quiz-question">
+                    <h3 id="expression-question">Quelle expression correspond à cette action?</h3>
+                    <div class="expression-demo" id="expression-demo-quiz" style="font-size: 5em; margin: 20px 0;">🤷</div>
+                    <div class="quiz-options" id="expression-options">
+                        <!-- Options will be generated -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Feedback Overlay -->
+    <div id="feedback-overlay" class="overlay hidden"></div>
+    <div id="feedback-bubble" class="feedback-bubble hidden">
+        <div class="emoji" id="feedback-emoji">🎉</div>
+        <h2 id="feedback-title">Bravo!</h2>
+        <p id="feedback-message">Tu as réussi!</p>
+        <button class="btn btn-success" id="close-feedback" style="margin-top: 20px;">Continuer</button>
+    </div>
+
+    <script>
+        // Navigation
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.activity-section').forEach(s => s.classList.remove('active'));
+
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+            });
+        });
+
+        // Body Parts Activity
+        const bodyDescriptions = {
+            'la tête': 'La partie supérieure du corps',
+            'les cheveux': 'Sur la tête',
+            'les yeux': 'Pour voir et regarder',
+            'le nez': 'Pour sentir les odeurs',
+            'la bouche': 'Pour parler, manger et chanter',
+            'les oreilles': 'Pour écouter et entendre',
+            'le cou': 'Entre la tête et les épaules',
+            'les épaules': 'En haut du bras',
+            'le bras': 'Entre l\'épaule et la main',
+            'le coude': 'L\'articulation du bras',
+            'la main': 'Au bout du bras',
+            'les doigts': 'Sur la main',
+            'la poitrine': 'La partie avant du torse',
+            'le ventre': 'La partie du corps avec l\'estomac',
+            'la jambe': 'Pour marcher et courir',
+            'le genou': 'L\'articulation de la jambe',
+            'le pied': 'Au bout de la jambe'
+        };
+
+        document.querySelectorAll('.body-part').forEach(part => {
+            part.addEventListener('click', () => {
+                const word = part.dataset.part;
+                document.getElementById('body-word').textContent = word;
+                document.getElementById('body-description').textContent = bodyDescriptions[word] || '';
+
+                document.querySelectorAll('.body-part').forEach(p => p.classList.remove('selected'));
+                document.querySelectorAll(`[data-part="${word}"]`).forEach(p => p.classList.add('selected'));
+
+                document.querySelectorAll('.body-part-btn').forEach(btn => {
+                    btn.classList.remove('correct');
+                    if (btn.dataset.word === word) {
+                        btn.classList.add('correct');
+                    }
+                });
+            });
+        });
+
+        document.querySelectorAll('.body-part-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const word = btn.dataset.word;
+                document.getElementById('body-word').textContent = word;
+                document.getElementById('body-description').textContent = bodyDescriptions[word] || '';
+
+                document.querySelectorAll('.body-part').forEach(p => p.classList.remove('selected'));
+                document.querySelectorAll(`[data-part="${word}"]`).forEach(p => p.classList.add('selected'));
+
+                document.querySelectorAll('.body-part-btn').forEach(b => b.classList.remove('correct'));
+                btn.classList.add('correct');
+            });
+        });
+
+        // Five Senses Quiz
+        const sensesQuestions = [
+            { question: "Avec quoi est-ce que je peux VOIR?", answer: "les yeux", options: ["les yeux", "les oreilles", "le nez", "la bouche"] },
+            { question: "Avec quoi est-ce que je peux ENTENDRE?", answer: "les oreilles", options: ["les yeux", "les oreilles", "la langue", "les mains"] },
+            { question: "Avec quoi est-ce que je peux SENTIR les odeurs?", answer: "le nez", options: ["la bouche", "les oreilles", "le nez", "les yeux"] },
+            { question: "Avec quoi est-ce que je peux GOÛTER?", answer: "la langue", options: ["le nez", "la langue", "les mains", "les yeux"] },
+            { question: "Avec quoi est-ce que je peux TOUCHER?", answer: "les mains", options: ["les pieds", "les oreilles", "le nez", "les mains"] }
+        ];
+
+        let currentSenseQuestion = 0;
+        let sensesScore = 0;
+
+        document.getElementById('start-senses-quiz').addEventListener('click', () => {
+            document.getElementById('senses-quiz-container').classList.remove('hidden');
+            currentSenseQuestion = 0;
+            sensesScore = 0;
+            showSenseQuestion();
+        });
+
+        function showSenseQuestion() {
+            if (currentSenseQuestion >= sensesQuestions.length) {
+                showFeedback(sensesScore >= 4 ? '🎉' : '💪',
+                    sensesScore >= 4 ? 'Excellent!' : 'Bien joué!',
+                    `Tu as ${sensesScore}/${sensesQuestions.length} bonnes réponses!`);
+                document.getElementById('senses-quiz-container').classList.add('hidden');
+                return;
+            }
+
+            const q = sensesQuestions[currentSenseQuestion];
+            document.getElementById('sense-question').textContent = q.question;
+
+            const optionsContainer = document.getElementById('sense-options');
+            optionsContainer.innerHTML = '';
+
+            q.options.sort(() => Math.random() - 0.5).forEach(option => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-option';
+                btn.textContent = option;
+                btn.addEventListener('click', () => checkSenseAnswer(option, q.answer, btn));
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkSenseAnswer(selected, correct, btn) {
+            document.querySelectorAll('#sense-options .quiz-option').forEach(b => b.classList.add('disabled'));
+
+            if (selected === correct) {
+                btn.classList.add('correct');
+                sensesScore++;
+                document.getElementById('senses-score').textContent = sensesScore;
+            } else {
+                btn.classList.add('wrong');
+                document.querySelectorAll('#sense-options .quiz-option').forEach(b => {
+                    if (b.textContent === correct) b.classList.add('correct');
+                });
+            }
+
+            setTimeout(() => {
+                currentSenseQuestion++;
+                showSenseQuestion();
+            }, 1500);
+        }
+
+        // Main Quiz
+        const quizQuestions = [
+            { question: "Comment s'appelle la partie du corps sur la tête avec laquelle on voit?", answer: "Les yeux", options: ["Les yeux", "Le nez", "Les oreilles", "La bouche"] },
+            { question: "Quelle partie du corps utilise-t-on pour marcher?", answer: "Les pieds", options: ["Les mains", "Les pieds", "Les bras", "La tête"] },
+            { question: "Comment s'appelle l'articulation au milieu de la jambe?", answer: "Le genou", options: ["Le coude", "L'épaule", "Le genou", "La cheville"] },
+            { question: "Quelle partie du corps est entre l'épaule et la main?", answer: "Le bras", options: ["La jambe", "Le cou", "Le bras", "Le dos"] },
+            { question: "Où se trouvent les doigts?", answer: "Sur la main", options: ["Sur le pied", "Sur la main", "Sur la tête", "Sur le ventre"] },
+            { question: "Comment s'appelle la partie du corps entre la tête et les épaules?", answer: "Le cou", options: ["Le dos", "Le ventre", "La poitrine", "Le cou"] },
+            { question: "Quelle partie du corps utilise-t-on pour sentir les odeurs?", answer: "Le nez", options: ["Les yeux", "Les oreilles", "Le nez", "La bouche"] },
+            { question: "Comment s'appelle l'articulation au milieu du bras?", answer: "Le coude", options: ["Le genou", "Le coude", "L'épaule", "Le poignet"] },
+            { question: "Quelle partie du visage utilise-t-on pour manger et parler?", answer: "La bouche", options: ["Le nez", "Les yeux", "La bouche", "Le front"] },
+            { question: "Comment s'appelle la partie supérieure du corps?", answer: "La tête", options: ["Le pied", "La main", "Le ventre", "La tête"] }
+        ];
+
+        let currentQuestion = 0;
+        let quizScore = 0;
+
+        function initQuiz() {
+            currentQuestion = 0;
+            quizScore = 0;
+            document.getElementById('quiz-score').textContent = '0';
+            document.getElementById('quiz-current').textContent = '1';
+            document.getElementById('next-question').classList.add('hidden');
+            document.getElementById('restart-quiz').classList.add('hidden');
+
+            // Shuffle questions
+            quizQuestions.sort(() => Math.random() - 0.5);
+
+            // Generate progress dots
+            const progressContainer = document.getElementById('quiz-progress');
+            progressContainer.innerHTML = '';
+            for (let i = 0; i < Math.min(quizQuestions.length, 10); i++) {
+                const dot = document.createElement('div');
+                dot.className = 'progress-dot' + (i === 0 ? ' current' : '');
+                progressContainer.appendChild(dot);
+            }
+
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const q = quizQuestions[currentQuestion];
+            document.getElementById('quiz-question-text').textContent = q.question;
+
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+
+            const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
+
+            shuffledOptions.forEach(option => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-option';
+                btn.textContent = option;
+                btn.addEventListener('click', () => checkAnswer(option, q.answer, btn));
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected, correct, btn) {
+            document.querySelectorAll('#quiz-options .quiz-option').forEach(b => b.classList.add('disabled'));
+
+            const dots = document.querySelectorAll('.progress-dot');
+
+            if (selected === correct) {
+                btn.classList.add('correct');
+                quizScore++;
+                document.getElementById('quiz-score').textContent = quizScore;
+                dots[currentQuestion].classList.add('completed');
+            } else {
+                btn.classList.add('wrong');
+                dots[currentQuestion].classList.add('wrong-answer');
+                document.querySelectorAll('#quiz-options .quiz-option').forEach(b => {
+                    if (b.textContent === correct) b.classList.add('correct');
+                });
+            }
+
+            if (currentQuestion < Math.min(quizQuestions.length - 1, 9)) {
+                document.getElementById('next-question').classList.remove('hidden');
+            } else {
+                document.getElementById('restart-quiz').classList.remove('hidden');
+                showFeedback(
+                    quizScore >= 8 ? '🏆' : quizScore >= 5 ? '⭐' : '💪',
+                    quizScore >= 8 ? 'Excellent!' : quizScore >= 5 ? 'Très bien!' : 'Continue!',
+                    `Tu as ${quizScore}/${Math.min(quizQuestions.length, 10)} bonnes réponses!`
+                );
+            }
+        }
+
+        document.getElementById('next-question').addEventListener('click', () => {
+            currentQuestion++;
+            document.getElementById('quiz-current').textContent = currentQuestion + 1;
+            document.getElementById('next-question').classList.add('hidden');
+
+            const dots = document.querySelectorAll('.progress-dot');
+            dots.forEach((dot, i) => dot.classList.toggle('current', i === currentQuestion));
+
+            showQuestion();
+        });
+
+        document.getElementById('restart-quiz').addEventListener('click', initQuiz);
+
+        // Initialize quiz on section open
+        document.querySelector('[data-tab="quiz"]').addEventListener('click', initQuiz);
+
+        // Memory Game
+        const memoryPairs = [
+            { word: 'la tête', emoji: '🗣️' },
+            { word: 'les yeux', emoji: '👀' },
+            { word: 'le nez', emoji: '👃' },
+            { word: 'la bouche', emoji: '👄' },
+            { word: 'les oreilles', emoji: '👂' },
+            { word: 'la main', emoji: '✋' },
+            { word: 'le pied', emoji: '🦶' },
+            { word: 'le cœur', emoji: '❤️' }
+        ];
+
+        let memoryCards = [];
+        let flippedCards = [];
+        let matchedPairs = 0;
+        let moves = 0;
+
+        function initMemory() {
+            memoryCards = [];
+            flippedCards = [];
+            matchedPairs = 0;
+            moves = 0;
+
+            document.getElementById('memory-moves').textContent = '0';
+            document.getElementById('memory-pairs').textContent = '0';
+
+            // Create pairs
+            const pairs = memoryPairs.slice(0, 6); // Use 6 pairs = 12 cards
+            pairs.forEach((pair, index) => {
+                memoryCards.push({ id: index * 2, type: 'word', content: pair.word, pairId: index });
+                memoryCards.push({ id: index * 2 + 1, type: 'emoji', content: pair.emoji, pairId: index });
+            });
+
+            // Shuffle
+            memoryCards.sort(() => Math.random() - 0.5);
+
+            // Render
+            const grid = document.getElementById('memory-grid');
+            grid.innerHTML = '';
+
+            memoryCards.forEach(card => {
+                const cardElement = document.createElement('div');
+                cardElement.className = 'memory-card';
+                cardElement.dataset.id = card.id;
+                cardElement.dataset.pairId = card.pairId;
+                cardElement.innerHTML = `
+                    <div class="card-front">
+                        ${card.type === 'emoji' ? `<span class="card-emoji">${card.content}</span>` : `<span>${card.content}</span>`}
+                    </div>
+                    <div class="card-back">?</div>
+                `;
+                cardElement.addEventListener('click', () => flipCard(cardElement, card));
+                grid.appendChild(cardElement);
+            });
+        }
+
+        function flipCard(element, card) {
+            if (flippedCards.length >= 2 || element.classList.contains('flipped') || element.classList.contains('matched')) {
+                return;
+            }
+
+            element.classList.add('flipped');
+            flippedCards.push({ element, card });
+
+            if (flippedCards.length === 2) {
+                moves++;
+                document.getElementById('memory-moves').textContent = moves;
+
+                const [first, second] = flippedCards;
+
+                if (first.card.pairId === second.card.pairId) {
+                    // Match!
+                    setTimeout(() => {
+                        first.element.classList.add('matched');
+                        second.element.classList.add('matched');
+                        matchedPairs++;
+                        document.getElementById('memory-pairs').textContent = matchedPairs;
+                        flippedCards = [];
+
+                        if (matchedPairs === 6) {
+                            setTimeout(() => {
+                                showFeedback('🎉', 'Félicitations!', `Tu as trouvé toutes les paires en ${moves} coups!`);
+                                createConfetti();
+                            }, 500);
+                        }
+                    }, 500);
+                } else {
+                    // No match
+                    setTimeout(() => {
+                        first.element.classList.remove('flipped');
+                        second.element.classList.remove('flipped');
+                        flippedCards = [];
+                    }, 1000);
+                }
+            }
+        }
+
+        document.getElementById('restart-memory').addEventListener('click', initMemory);
+        document.querySelector('[data-tab="memory"]').addEventListener('click', initMemory);
+
+        // Expressions Practice
+        const expressionQuestions = [
+            { emoji: '🤷', answer: 'Hausser les épaules', options: ['Hausser les épaules', 'Lever les bras', 'Baisser les bras', 'Plier les jambes'] },
+            { emoji: '🙌', answer: 'Lever les bras', options: ['Hausser les épaules', 'Lever les bras', 'Baisser les bras', 'Pointer du doigt'] },
+            { emoji: '👉', answer: 'Pointer du doigt', options: ['Se laver les mains', 'Lever les bras', 'Pointer du doigt', 'Plier les jambes'] },
+            { emoji: '🚶', answer: 'Aller à pied', options: ['Aller à pied', 'Plier les jambes', 'Tomber sur les fesses', 'Lever les bras'] },
+            { emoji: '🧼🖐️', answer: 'Se laver les mains', options: ['Pointer du doigt', 'Se laver les mains', 'Lever les bras', 'Se toucher les oreilles'] }
+        ];
+
+        let currentExpression = 0;
+
+        document.getElementById('practice-expressions').addEventListener('click', () => {
+            document.getElementById('expression-practice').classList.remove('hidden');
+            currentExpression = 0;
+            showExpressionQuestion();
+        });
+
+        function showExpressionQuestion() {
+            if (currentExpression >= expressionQuestions.length) {
+                document.getElementById('expression-practice').classList.add('hidden');
+                showFeedback('🎉', 'Bravo!', 'Tu connais bien les expressions!');
+                return;
+            }
+
+            const q = expressionQuestions[currentExpression];
+            document.getElementById('expression-demo-quiz').textContent = q.emoji;
+
+            const optionsContainer = document.getElementById('expression-options');
+            optionsContainer.innerHTML = '';
+
+            q.options.sort(() => Math.random() - 0.5).forEach(option => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-option';
+                btn.textContent = option;
+                btn.addEventListener('click', () => checkExpressionAnswer(option, q.answer, btn));
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkExpressionAnswer(selected, correct, btn) {
+            document.querySelectorAll('#expression-options .quiz-option').forEach(b => b.classList.add('disabled'));
+
+            if (selected === correct) {
+                btn.classList.add('correct');
+            } else {
+                btn.classList.add('wrong');
+                document.querySelectorAll('#expression-options .quiz-option').forEach(b => {
+                    if (b.textContent === correct) b.classList.add('correct');
+                });
+            }
+
+            setTimeout(() => {
+                currentExpression++;
+                showExpressionQuestion();
+            }, 1500);
+        }
+
+        // Feedback System
+        function showFeedback(emoji, title, message) {
+            document.getElementById('feedback-emoji').textContent = emoji;
+            document.getElementById('feedback-title').textContent = title;
+            document.getElementById('feedback-message').textContent = message;
+            document.getElementById('feedback-overlay').classList.remove('hidden');
+            document.getElementById('feedback-bubble').classList.remove('hidden');
+        }
+
+        document.getElementById('close-feedback').addEventListener('click', () => {
+            document.getElementById('feedback-overlay').classList.add('hidden');
+            document.getElementById('feedback-bubble').classList.add('hidden');
+        });
+
+        document.getElementById('feedback-overlay').addEventListener('click', () => {
+            document.getElementById('feedback-overlay').classList.add('hidden');
+            document.getElementById('feedback-bubble').classList.add('hidden');
+        });
+
+        // Confetti Effect
+        function createConfetti() {
+            const colors = ['#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6', '#1abc9c'];
+
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = Math.random() * 2 + 's';
+                confetti.style.width = Math.random() * 10 + 5 + 'px';
+                confetti.style.height = Math.random() * 10 + 5 + 'px';
+                document.body.appendChild(confetti);
+
+                setTimeout(() => confetti.remove(), 3000);
+            }
+        }
+
+        // Initialize
+        initQuiz();
+        initMemory();
+    </script>
+</body>
+</html>
