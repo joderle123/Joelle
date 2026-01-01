@@ -1,0 +1,1832 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L'Aventure de Somia - Le Passé Composé</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6C5CE7;
+            --secondary: #A29BFE;
+            --accent: #FD79A8;
+            --success: #00B894;
+            --warning: #FDCB6E;
+            --danger: #E17055;
+            --dark: #2D3436;
+            --light: #DFE6E9;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: white;
+        }
+
+        /* Animated Background Stars */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); }
+        }
+
+        /* Main Container */
+        .game-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header with XP and Level */
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .player-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            border: 3px solid var(--warning);
+            box-shadow: 0 0 20px rgba(253, 203, 110, 0.5);
+        }
+
+        .level-info h3 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.2em;
+            color: var(--warning);
+        }
+
+        .xp-bar {
+            width: 150px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+
+        .xp-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success), var(--warning));
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px var(--success);
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+        }
+
+        .stat-value {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.5em;
+            color: var(--warning);
+        }
+
+        .stat-label {
+            font-size: 0.8em;
+            opacity: 0.8;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-tab {
+            padding: 15px 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid transparent;
+            border-radius: 15px;
+            color: white;
+            font-weight: 700;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-tab:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-color: var(--warning);
+            box-shadow: 0 5px 30px rgba(108, 92, 231, 0.5);
+        }
+
+        .nav-tab .icon {
+            font-size: 1.3em;
+        }
+
+        /* Content Sections */
+        .section {
+            display: none;
+            animation: slideIn 0.5s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Story Section */
+        .story-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 25px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .story-scene {
+            position: relative;
+            height: 350px;
+            background: linear-gradient(180deg, #87CEEB 0%, #E0F7FA 100%);
+            overflow: hidden;
+            display: none;
+        }
+
+        .story-scene.active {
+            display: block;
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Scene Illustrations */
+        .scene-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .house {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 250px;
+            background: #8B4513;
+            clip-path: polygon(50% 0%, 100% 35%, 100% 100%, 0% 100%, 0% 35%);
+        }
+
+        .stairs {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .stair {
+            height: 20px;
+            background: linear-gradient(180deg, #5D4037 0%, #3E2723 100%);
+            border-radius: 3px;
+            animation: stairGlow 2s infinite;
+        }
+
+        .stair:nth-child(1) { width: 60%; margin-left: 40%; }
+        .stair:nth-child(2) { width: 70%; margin-left: 30%; }
+        .stair:nth-child(3) { width: 80%; margin-left: 20%; }
+        .stair:nth-child(4) { width: 90%; margin-left: 10%; }
+        .stair:nth-child(5) { width: 100%; }
+
+        .character {
+            position: absolute;
+            font-size: 4em;
+            transition: all 0.5s ease;
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3));
+        }
+
+        .character.falling {
+            animation: fall 1s ease-in forwards;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(150px) rotate(45deg); }
+        }
+
+        .character.hurt {
+            animation: hurt 0.5s ease infinite;
+        }
+
+        @keyframes hurt {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Paintings on wall */
+        .painting {
+            position: absolute;
+            width: 60px;
+            height: 80px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border: 5px solid #8B4513;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            animation: paintingGlow 3s infinite;
+        }
+
+        @keyframes paintingGlow {
+            0%, 100% { box-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
+            50% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.8); }
+        }
+
+        .ambulance {
+            position: absolute;
+            font-size: 5em;
+            bottom: 30px;
+            animation: driveIn 2s ease-out forwards;
+        }
+
+        @keyframes driveIn {
+            from { left: -100px; }
+            to { left: 50%; transform: translateX(-50%); }
+        }
+
+        /* Story Text */
+        .story-text-container {
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .story-text {
+            font-size: 1.2em;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .story-text .highlight {
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .story-text .highlight:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px var(--accent);
+        }
+
+        .story-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .story-progress {
+            display: flex;
+            gap: 8px;
+        }
+
+        .progress-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .progress-dot.active {
+            background: var(--warning);
+            box-shadow: 0 0 10px var(--warning);
+        }
+
+        .progress-dot.completed {
+            background: var(--success);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 15px 35px;
+            border: none;
+            border-radius: 15px;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            box-shadow: 0 5px 20px rgba(108, 92, 231, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(108, 92, 231, 0.6);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #55EFC4);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning), #F8B500);
+            color: var(--dark);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Passé Composé Game Section */
+        .game-mode-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .game-mode-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .game-mode-card:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .game-mode-card.selected {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-color: var(--warning);
+        }
+
+        .game-mode-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .game-mode-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .game-mode-desc {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        /* Verb Building Game */
+        .verb-builder {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 25px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .verb-prompt {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .verb-prompt h2 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.8em;
+            color: var(--warning);
+            margin-bottom: 10px;
+        }
+
+        .verb-sentence {
+            font-size: 1.5em;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .verb-blank {
+            display: inline-block;
+            min-width: 150px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px dashed var(--warning);
+            border-radius: 10px;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+
+        .verb-blank.filled {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-style: solid;
+        }
+
+        .verb-blank.correct {
+            background: linear-gradient(135deg, var(--success), #55EFC4);
+            border-color: var(--success);
+            animation: pulse 0.5s ease;
+        }
+
+        .verb-blank.wrong {
+            background: linear-gradient(135deg, var(--danger), #FF7675);
+            border-color: var(--danger);
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .verb-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .verb-option {
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            color: white;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .verb-option:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .verb-option.selected {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-color: var(--warning);
+        }
+
+        .verb-option.disabled {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        /* Conjugation Table */
+        .conjugation-helper {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .conjugation-helper h3 {
+            font-family: 'Fredoka One', cursive;
+            color: var(--warning);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .conjugation-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .conjugation-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .pronoun {
+            font-weight: 700;
+            color: var(--secondary);
+            min-width: 80px;
+        }
+
+        .auxiliary {
+            color: var(--warning);
+            font-weight: 600;
+        }
+
+        .participle {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Timer */
+        .timer-container {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+        }
+
+        .timer-ring {
+            transform: rotate(-90deg);
+        }
+
+        .timer-ring circle {
+            fill: none;
+            stroke-width: 8;
+        }
+
+        .timer-bg {
+            stroke: rgba(255, 255, 255, 0.1);
+        }
+
+        .timer-progress {
+            stroke: var(--warning);
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s linear;
+        }
+
+        .timer-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.5em;
+            color: var(--warning);
+        }
+
+        /* Achievements */
+        .achievement-popup {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--warning), #F8B500);
+            color: var(--dark);
+            padding: 20px 30px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            animation: achievementSlide 0.5s ease, achievementSlide 0.5s ease 3s reverse forwards;
+            z-index: 1000;
+            box-shadow: 0 10px 40px rgba(253, 203, 110, 0.5);
+        }
+
+        @keyframes achievementSlide {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .achievement-icon {
+            font-size: 2.5em;
+        }
+
+        .achievement-text h4 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.2em;
+        }
+
+        /* Scoreboard */
+        .scoreboard {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .score-item {
+            text-align: center;
+            padding: 20px 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+        }
+
+        .score-item .value {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.5em;
+            color: var(--warning);
+        }
+
+        .score-item .label {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+
+        /* Results Screen */
+        .results-screen {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .results-emoji {
+            font-size: 6em;
+            margin-bottom: 20px;
+            animation: bounce 1s ease infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .results-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--warning), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .results-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 30px 0;
+        }
+
+        .result-stat {
+            text-align: center;
+        }
+
+        .result-stat .number {
+            font-family: 'Fredoka One', cursive;
+            font-size: 3em;
+            color: var(--success);
+        }
+
+        .result-stat .label {
+            opacity: 0.8;
+        }
+
+        /* Explanation Cards */
+        .explanation-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 20px 0;
+            border-left: 5px solid var(--primary);
+        }
+
+        .explanation-card h3 {
+            font-family: 'Fredoka One', cursive;
+            color: var(--warning);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .explanation-card p {
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .formula {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            font-size: 1.3em;
+            flex-wrap: wrap;
+        }
+
+        .formula-part {
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 700;
+        }
+
+        .formula-part.subject {
+            background: var(--secondary);
+        }
+
+        .formula-part.auxiliary {
+            background: var(--warning);
+            color: var(--dark);
+        }
+
+        .formula-part.participle {
+            background: var(--accent);
+        }
+
+        .formula-plus {
+            font-size: 1.5em;
+            color: var(--warning);
+        }
+
+        /* Hidden class */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .game-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .stats {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .story-scene {
+                height: 250px;
+            }
+
+            .verb-sentence {
+                font-size: 1.2em;
+            }
+
+            .conjugation-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Particles */
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1000;
+            animation: particleFade 1s ease-out forwards;
+        }
+
+        @keyframes particleFade {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-100px) scale(0); }
+        }
+
+        /* Combo counter */
+        .combo-display {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Fredoka One', cursive;
+            font-size: 4em;
+            color: var(--warning);
+            text-shadow: 0 0 30px var(--warning);
+            animation: comboPopup 0.8s ease forwards;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        @keyframes comboPopup {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+        }
+
+        /* Streak fire */
+        .streak-fire {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2em;
+            animation: fireFloat 0.5s ease infinite;
+        }
+
+        @keyframes fireFloat {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Stars Background -->
+    <div class="stars" id="stars"></div>
+
+    <div class="game-container">
+        <!-- Game Header -->
+        <div class="game-header">
+            <div class="player-info">
+                <div class="avatar">🧙</div>
+                <div class="level-info">
+                    <h3>Niveau <span id="player-level">1</span></h3>
+                    <div class="xp-bar">
+                        <div class="xp-fill" id="xp-fill" style="width: 0%"></div>
+                    </div>
+                    <small><span id="current-xp">0</span> / <span id="max-xp">100</span> XP</small>
+                </div>
+            </div>
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-value" id="total-score">0</div>
+                    <div class="stat-label">Points</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="streak-count">0</div>
+                    <div class="stat-label">Série 🔥</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-section="story">
+                <span class="icon">📖</span>
+                L'Histoire
+            </button>
+            <button class="nav-tab" data-section="learn">
+                <span class="icon">🎓</span>
+                Apprendre
+            </button>
+            <button class="nav-tab" data-section="practice">
+                <span class="icon">🎮</span>
+                Jouer
+            </button>
+            <button class="nav-tab" data-section="challenge">
+                <span class="icon">⚡</span>
+                Défi Chrono
+            </button>
+        </div>
+
+        <!-- Story Section -->
+        <section id="story" class="section active">
+            <div class="story-container">
+                <!-- Scene 1 -->
+                <div class="story-scene active" id="scene-1">
+                    <div class="scene-bg" style="background: linear-gradient(180deg, #FFE4B5 0%, #DEB887 100%);">
+                        <div class="painting" style="top: 30px; left: 20%;">👩</div>
+                        <div class="painting" style="top: 50px; left: 35%;">🏖️</div>
+                        <div class="painting" style="top: 30px; right: 20%;">👨</div>
+                        <div class="stairs">
+                            <div class="stair"></div>
+                            <div class="stair"></div>
+                            <div class="stair"></div>
+                            <div class="stair"></div>
+                            <div class="stair"></div>
+                        </div>
+                        <div class="character" id="somia" style="bottom: 180px; left: 45%;">👧🏽</div>
+                        <div class="character" style="bottom: 200px; left: 30%;">👦🏿</div>
+                        <div class="character" style="bottom: 200px; right: 30%;">👧🏼</div>
+                    </div>
+                </div>
+
+                <!-- Scene 2 -->
+                <div class="story-scene" id="scene-2">
+                    <div class="scene-bg" style="background: linear-gradient(180deg, #FFE4B5 0%, #DEB887 100%);">
+                        <div class="painting" style="top: 30px; left: 30%; animation: paintingGlow 1s infinite;">✨👩✨</div>
+                        <div class="painting" style="top: 30px; right: 30%; animation: paintingGlow 1s infinite 0.5s;">✨🎱✨</div>
+                        <div class="character" id="somia-looking" style="bottom: 150px; left: 45%; font-size: 5em;">👧🏽😲</div>
+                    </div>
+                </div>
+
+                <!-- Scene 3 -->
+                <div class="story-scene" id="scene-3">
+                    <div class="scene-bg" style="background: linear-gradient(180deg, #FFE4B5 0%, #DEB887 100%);">
+                        <div class="stairs">
+                            <div class="stair"></div>
+                            <div class="stair"></div>
+                            <div class="stair"></div>
+                            <div class="stair"></div>
+                            <div class="stair"></div>
+                        </div>
+                        <div class="character falling" style="bottom: 180px; left: 45%;">👧🏽💫</div>
+                        <div style="position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%); font-size: 3em;">💥 Aïe!</div>
+                    </div>
+                </div>
+
+                <!-- Scene 4 -->
+                <div class="story-scene" id="scene-4">
+                    <div class="scene-bg" style="background: linear-gradient(180deg, #87CEEB 0%, #98FB98 100%);">
+                        <div class="ambulance">🚑</div>
+                        <div class="character hurt" style="bottom: 80px; left: 30%;">👧🏽🤕</div>
+                        <div class="character" style="bottom: 100px; right: 25%;">👩📱</div>
+                    </div>
+                </div>
+
+                <!-- Scene 5 -->
+                <div class="story-scene" id="scene-5">
+                    <div class="scene-bg" style="background: linear-gradient(180deg, #E8F5E9 0%, #C8E6C9 100%);">
+                        <div style="position: absolute; top: 20px; left: 50%; transform: translateX(-50%); font-size: 1.5em; color: #333;">🏥 HÔPITAL</div>
+                        <div class="character" style="bottom: 100px; left: 30%; font-size: 4em;">👨‍⚕️</div>
+                        <div class="character" style="bottom: 80px; left: 50%;">👧🏽🦵🩹</div>
+                        <div style="position: absolute; bottom: 60px; right: 25%; font-size: 3em;">🩼🩼</div>
+                    </div>
+                </div>
+
+                <!-- Scene 6 -->
+                <div class="story-scene" id="scene-6">
+                    <div class="scene-bg" style="background: linear-gradient(180deg, #FFF9C4 0%, #FFEB3B 100%);">
+                        <div class="character" style="bottom: 100px; left: 35%; font-size: 5em;">👧🏽😊</div>
+                        <div style="position: absolute; bottom: 60px; left: 50%; font-size: 4em;">🩼</div>
+                        <div style="position: absolute; bottom: 120px; right: 20%; font-size: 2em; color: #333; background: white; padding: 15px; border-radius: 15px;">
+                            Mes copines vont être jalouses! 😄
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Story Text -->
+                <div class="story-text-container">
+                    <div class="story-text" id="story-text">
+                        Sophie, Moussa et Somia <span class="highlight" data-verb="descendre">sont descendus</span> vite les escaliers avec l'appareil photo. Les enfants <span class="highlight" data-verb="vouloir">ont voulu</span> prendre des photos de Papy.
+                    </div>
+
+                    <div class="story-navigation">
+                        <button class="btn btn-primary" id="prev-scene" disabled>
+                            ⬅️ Précédent
+                        </button>
+                        <div class="story-progress">
+                            <div class="progress-dot active"></div>
+                            <div class="progress-dot"></div>
+                            <div class="progress-dot"></div>
+                            <div class="progress-dot"></div>
+                            <div class="progress-dot"></div>
+                            <div class="progress-dot"></div>
+                        </div>
+                        <button class="btn btn-primary" id="next-scene">
+                            Suivant ➡️
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Learn Section -->
+        <section id="learn" class="section">
+            <div class="explanation-card">
+                <h3>🎯 Le Passé Composé - C'est quoi?</h3>
+                <p>Le passé composé, c'est comme une <strong>machine à remonter le temps</strong>! On l'utilise pour parler de choses qui se sont passées <strong>AVANT maintenant</strong>.</p>
+                <p>Exemple: <em>"Hier, j'<strong>ai mangé</strong> une pizza."</em> 🍕</p>
+            </div>
+
+            <div class="explanation-card">
+                <h3>🔧 La Formule Magique</h3>
+                <p>Pour construire le passé composé, tu as besoin de <strong>2 ingrédients</strong>:</p>
+                <div class="formula">
+                    <span class="formula-part subject">SUJET</span>
+                    <span class="formula-plus">+</span>
+                    <span class="formula-part auxiliary">AVOIR / ÊTRE</span>
+                    <span class="formula-plus">+</span>
+                    <span class="formula-part participle">PARTICIPE PASSÉ</span>
+                </div>
+            </div>
+
+            <div class="explanation-card">
+                <h3>🌟 Avec AVOIR (la plupart des verbes)</h3>
+                <div class="conjugation-grid">
+                    <div class="conjugation-item">
+                        <span class="pronoun">J'</span>
+                        <span class="auxiliary">ai</span>
+                        <span class="participle">mangé</span>
+                    </div>
+                    <div class="conjugation-item">
+                        <span class="pronoun">Tu</span>
+                        <span class="auxiliary">as</span>
+                        <span class="participle">mangé</span>
+                    </div>
+                    <div class="conjugation-item">
+                        <span class="pronoun">Il/Elle</span>
+                        <span class="auxiliary">a</span>
+                        <span class="participle">mangé</span>
+                    </div>
+                    <div class="conjugation-item">
+                        <span class="pronoun">Nous</span>
+                        <span class="auxiliary">avons</span>
+                        <span class="participle">mangé</span>
+                    </div>
+                    <div class="conjugation-item">
+                        <span class="pronoun">Vous</span>
+                        <span class="auxiliary">avez</span>
+                        <span class="participle">mangé</span>
+                    </div>
+                    <div class="conjugation-item">
+                        <span class="pronoun">Ils/Elles</span>
+                        <span class="auxiliary">ont</span>
+                        <span class="participle">mangé</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="explanation-card">
+                <h3>🏠 Avec ÊTRE (verbes de mouvement)</h3>
+                <p>Certains verbes utilisent <strong>ÊTRE</strong> au lieu de AVOIR. Retiens la maison d'être:</p>
+                <p style="font-size: 1.3em; text-align: center; margin: 20px 0;">
+                    🚶 <strong>aller, venir, arriver, partir, entrer, sortir, monter, descendre, tomber, rester, naître, mourir</strong>
+                </p>
+                <div class="conjugation-grid">
+                    <div class="conjugation-item">
+                        <span class="pronoun">Je</span>
+                        <span class="auxiliary">suis</span>
+                        <span class="participle">tombé(e)</span>
+                    </div>
+                    <div class="conjugation-item">
+                        <span class="pronoun">Tu</span>
+                        <span class="auxiliary">es</span>
+                        <span class="participle">tombé(e)</span>
+                    </div>
+                    <div class="conjugation-item">
+                        <span class="pronoun">Il/Elle</span>
+                        <span class="auxiliary">est</span>
+                        <span class="participle">tombé(e)</span>
+                    </div>
+                    <div class="conjugation-item">
+                        <span class="pronoun">Nous</span>
+                        <span class="auxiliary">sommes</span>
+                        <span class="participle">tombé(e)s</span>
+                    </div>
+                    <div class="conjugation-item">
+                        <span class="pronoun">Vous</span>
+                        <span class="auxiliary">êtes</span>
+                        <span class="participle">tombé(e)s</span>
+                    </div>
+                    <div class="conjugation-item">
+                        <span class="pronoun">Ils/Elles</span>
+                        <span class="auxiliary">sont</span>
+                        <span class="participle">tombé(e)s</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="explanation-card">
+                <h3>🎨 Les Terminaisons du Participe Passé</h3>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; text-align: center;">
+                    <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 15px;">
+                        <div style="font-size: 2em; margin-bottom: 10px;">-ER → -É</div>
+                        <div>manger → mangé</div>
+                        <div>regarder → regardé</div>
+                    </div>
+                    <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 15px;">
+                        <div style="font-size: 2em; margin-bottom: 10px;">-IR → -I</div>
+                        <div>finir → fini</div>
+                        <div>choisir → choisi</div>
+                    </div>
+                    <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 15px;">
+                        <div style="font-size: 2em; margin-bottom: 10px;">Irréguliers 🎲</div>
+                        <div>faire → fait</div>
+                        <div>être → été</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn btn-success" onclick="switchSection('practice')">
+                    🎮 C'est parti, je veux jouer!
+                </button>
+            </div>
+        </section>
+
+        <!-- Practice Section -->
+        <section id="practice" class="section">
+            <div class="game-mode-selector">
+                <div class="game-mode-card selected" data-mode="fill">
+                    <div class="game-mode-icon">✏️</div>
+                    <div class="game-mode-title">Complète la phrase</div>
+                    <div class="game-mode-desc">Choisis la bonne forme du verbe</div>
+                </div>
+                <div class="game-mode-card" data-mode="build">
+                    <div class="game-mode-icon">🧱</div>
+                    <div class="game-mode-title">Construis le verbe</div>
+                    <div class="game-mode-desc">Assemble auxiliaire + participe</div>
+                </div>
+                <div class="game-mode-card" data-mode="sort">
+                    <div class="game-mode-icon">🎯</div>
+                    <div class="game-mode-title">AVOIR ou ÊTRE?</div>
+                    <div class="game-mode-desc">Trie les verbes</div>
+                </div>
+            </div>
+
+            <div class="verb-builder" id="game-area">
+                <div class="verb-prompt">
+                    <h2 id="game-instruction">Complète avec le passé composé</h2>
+                    <p id="game-hint">Verbe: <strong id="infinitive-hint">manger</strong></p>
+                </div>
+
+                <div class="verb-sentence" id="sentence-display">
+                    Hier, je <span class="verb-blank" id="answer-slot">???</span> une pizza.
+                </div>
+
+                <div class="verb-options" id="options-container">
+                    <!-- Options generated by JS -->
+                </div>
+
+                <div class="conjugation-helper" id="helper-box">
+                    <h3>💡 Aide-mémoire</h3>
+                    <div class="conjugation-grid" id="helper-grid">
+                        <!-- Helper content -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="scoreboard">
+                <div class="score-item">
+                    <div class="value" id="correct-count">0</div>
+                    <div class="label">Correct ✅</div>
+                </div>
+                <div class="score-item">
+                    <div class="value" id="question-number">1</div>
+                    <div class="label">Question</div>
+                </div>
+                <div class="score-item">
+                    <div class="value" id="wrong-count">0</div>
+                    <div class="label">Erreurs ❌</div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn btn-warning" id="skip-btn">Passer ⏭️</button>
+                <button class="btn btn-primary" id="next-question-btn" style="display: none;">Question Suivante ➡️</button>
+            </div>
+        </section>
+
+        <!-- Challenge Section -->
+        <section id="challenge" class="section">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <h2 style="font-family: 'Fredoka One', cursive; font-size: 2em; color: var(--warning);">⚡ Défi Chrono ⚡</h2>
+                <p style="opacity: 0.8;">Réponds à un maximum de questions en 60 secondes!</p>
+            </div>
+
+            <div class="timer-container" id="timer-container">
+                <svg class="timer-ring" width="80" height="80">
+                    <circle class="timer-bg" cx="40" cy="40" r="35"/>
+                    <circle class="timer-progress" id="timer-progress" cx="40" cy="40" r="35"
+                            stroke-dasharray="220" stroke-dashoffset="0"/>
+                </svg>
+                <div class="timer-text" id="timer-text">60</div>
+            </div>
+
+            <div id="challenge-game" class="hidden">
+                <div class="verb-builder">
+                    <div class="verb-prompt">
+                        <h2 id="challenge-instruction">Complète vite!</h2>
+                    </div>
+                    <div class="verb-sentence" id="challenge-sentence">
+                        <!-- Generated -->
+                    </div>
+                    <div class="verb-options" id="challenge-options">
+                        <!-- Options -->
+                    </div>
+                </div>
+            </div>
+
+            <div id="challenge-start" style="text-align: center;">
+                <div style="font-size: 6em; margin-bottom: 20px;">🏆</div>
+                <p style="font-size: 1.2em; margin-bottom: 30px;">Prêt à relever le défi?</p>
+                <button class="btn btn-success" id="start-challenge-btn" style="font-size: 1.3em; padding: 20px 50px;">
+                    🚀 Commencer le Défi!
+                </button>
+            </div>
+
+            <div id="challenge-results" class="hidden">
+                <div class="results-screen">
+                    <div class="results-emoji" id="results-emoji">🏆</div>
+                    <h2 class="results-title" id="results-title">Incroyable!</h2>
+                    <div class="results-stats">
+                        <div class="result-stat">
+                            <div class="number" id="final-correct">0</div>
+                            <div class="label">Bonnes réponses</div>
+                        </div>
+                        <div class="result-stat">
+                            <div class="number" id="final-points">0</div>
+                            <div class="label">Points gagnés</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="retry-challenge">🔄 Rejouer</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Initialize stars background
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+        createStars();
+
+        // Game State
+        let gameState = {
+            xp: 0,
+            level: 1,
+            totalScore: 0,
+            streak: 0,
+            correctCount: 0,
+            wrongCount: 0,
+            currentQuestion: 0
+        };
+
+        // Story Data
+        const storyScenes = [
+            {
+                text: `Sophie, Moussa et Somia <span class="highlight">sont descendus</span> vite les escaliers avec l'appareil photo de Tante Célestine. Les enfants <span class="highlight">ont voulu</span> prendre des photos de Papy.`
+            },
+            {
+                text: `Quand Somia <span class="highlight">a descendu</span> les escaliers, elle <span class="highlight">a regardé</span> les tableaux au mur. Mais... c'est incroyable! Les personnages <span class="highlight">ont bougé</span>! 😱`
+            },
+            {
+                text: `Somia <span class="highlight">est tombée</span> dans les escaliers! Aïïeee!!! 💥 Quand elle <span class="highlight">est arrivée</span> en bas, elle <span class="highlight">a tenu</span> sa jambe et <span class="highlight">a pleuré</span>: "Oh, j'ai mal!"`
+            },
+            {
+                text: `Tante Aurore <span class="highlight">est arrivée</span> en courant. Elle <span class="highlight">a pris</span> son portable et <span class="highlight">a composé</span> le numéro des urgences. L'ambulance <span class="highlight">est arrivée</span> à toute vitesse! 🚑`
+            },
+            {
+                text: `À l'hôpital, un médecin <span class="highlight">a examiné</span> Somia. "Tu <span class="highlight">as cassé</span> la jambe, ma grande." Un infirmier <span class="highlight">a posé</span> un plâtre. Elle doit le porter pendant six semaines!`
+            },
+            {
+                text: `Mais quand l'infirmier <span class="highlight">a apporté</span> des béquilles rouges, Somia <span class="highlight">a souri</span>: "Maintenant, mes copines vont être jalouses!" 😄🩼`
+            }
+        ];
+
+        let currentScene = 0;
+
+        // Questions Data
+        const questions = [
+            {
+                sentence: "Hier, je ___ une pizza.",
+                verb: "manger",
+                subject: "je",
+                correct: "ai mangé",
+                options: ["ai mangé", "as mangé", "a mangé", "suis mangé"],
+                auxiliary: "avoir"
+            },
+            {
+                sentence: "Elle ___ dans les escaliers.",
+                verb: "tomber",
+                subject: "elle",
+                correct: "est tombée",
+                options: ["a tombé", "est tombée", "est tombé", "ai tombé"],
+                auxiliary: "être"
+            },
+            {
+                sentence: "Nous ___ un bon film.",
+                verb: "regarder",
+                subject: "nous",
+                correct: "avons regardé",
+                options: ["avons regardé", "sommes regardé", "ont regardé", "êtes regardé"],
+                auxiliary: "avoir"
+            },
+            {
+                sentence: "Tu ___ à l'école ce matin.",
+                verb: "aller",
+                subject: "tu",
+                correct: "es allé(e)",
+                options: ["as allé", "es allé(e)", "est allé", "suis allé"],
+                auxiliary: "être"
+            },
+            {
+                sentence: "Les enfants ___ leurs devoirs.",
+                verb: "finir",
+                subject: "ils",
+                correct: "ont fini",
+                options: ["ont fini", "sont fini", "avons fini", "a fini"],
+                auxiliary: "avoir"
+            },
+            {
+                sentence: "Marie ___ à Paris.",
+                verb: "partir",
+                subject: "elle",
+                correct: "est partie",
+                options: ["a parti", "est partie", "est parti", "sont partie"],
+                auxiliary: "être"
+            },
+            {
+                sentence: "Vous ___ du gâteau?",
+                verb: "prendre",
+                subject: "vous",
+                correct: "avez pris",
+                options: ["êtes pris", "avez pris", "avons pris", "ont pris"],
+                auxiliary: "avoir"
+            },
+            {
+                sentence: "Je ___ très tôt ce matin.",
+                verb: "se lever",
+                subject: "je",
+                correct: "me suis levé(e)",
+                options: ["m'ai levé", "me suis levé(e)", "suis levé", "ai levé"],
+                auxiliary: "être"
+            },
+            {
+                sentence: "Somia ___ sa jambe.",
+                verb: "casser",
+                subject: "elle",
+                correct: "a cassé",
+                options: ["a cassé", "est cassée", "ont cassé", "as cassé"],
+                auxiliary: "avoir"
+            },
+            {
+                sentence: "L'ambulance ___ rapidement.",
+                verb: "arriver",
+                subject: "elle",
+                correct: "est arrivée",
+                options: ["a arrivé", "est arrivée", "est arrivé", "sont arrivée"],
+                auxiliary: "être"
+            },
+            {
+                sentence: "Nous ___ au restaurant hier soir.",
+                verb: "manger",
+                subject: "nous",
+                correct: "avons mangé",
+                options: ["sommes mangé", "avons mangé", "ont mangé", "êtes mangé"],
+                auxiliary: "avoir"
+            },
+            {
+                sentence: "Le médecin ___ la jambe de Somia.",
+                verb: "examiner",
+                subject: "il",
+                correct: "a examiné",
+                options: ["a examiné", "est examiné", "ont examiné", "as examiné"],
+                auxiliary: "avoir"
+            }
+        ];
+
+        let shuffledQuestions = [...questions].sort(() => Math.random() - 0.5);
+
+        // Navigation
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const section = tab.dataset.section;
+                switchSection(section);
+            });
+        });
+
+        function switchSection(sectionId) {
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+
+            document.querySelector(`[data-section="${sectionId}"]`).classList.add('active');
+            document.getElementById(sectionId).classList.add('active');
+
+            if (sectionId === 'practice') {
+                loadQuestion();
+            }
+        }
+
+        // Story Navigation
+        document.getElementById('next-scene').addEventListener('click', () => {
+            if (currentScene < storyScenes.length - 1) {
+                currentScene++;
+                updateStory();
+                addXP(10);
+            }
+        });
+
+        document.getElementById('prev-scene').addEventListener('click', () => {
+            if (currentScene > 0) {
+                currentScene--;
+                updateStory();
+            }
+        });
+
+        function updateStory() {
+            // Update scenes
+            document.querySelectorAll('.story-scene').forEach((scene, index) => {
+                scene.classList.toggle('active', index === currentScene);
+            });
+
+            // Update text
+            document.getElementById('story-text').innerHTML = storyScenes[currentScene].text;
+
+            // Update progress dots
+            document.querySelectorAll('.progress-dot').forEach((dot, index) => {
+                dot.classList.remove('active', 'completed');
+                if (index < currentScene) dot.classList.add('completed');
+                if (index === currentScene) dot.classList.add('active');
+            });
+
+            // Update buttons
+            document.getElementById('prev-scene').disabled = currentScene === 0;
+            document.getElementById('next-scene').disabled = currentScene === storyScenes.length - 1;
+            document.getElementById('next-scene').textContent = currentScene === storyScenes.length - 1 ? '🎮 Jouer!' : 'Suivant ➡️';
+
+            if (currentScene === storyScenes.length - 1) {
+                document.getElementById('next-scene').onclick = () => switchSection('practice');
+            } else {
+                document.getElementById('next-scene').onclick = () => {
+                    if (currentScene < storyScenes.length - 1) {
+                        currentScene++;
+                        updateStory();
+                        addXP(10);
+                    }
+                };
+            }
+        }
+
+        // Practice Game
+        function loadQuestion() {
+            if (gameState.currentQuestion >= shuffledQuestions.length) {
+                shuffledQuestions = [...questions].sort(() => Math.random() - 0.5);
+                gameState.currentQuestion = 0;
+            }
+
+            const q = shuffledQuestions[gameState.currentQuestion];
+
+            document.getElementById('infinitive-hint').textContent = q.verb;
+            document.getElementById('sentence-display').innerHTML = q.sentence.replace('___', '<span class="verb-blank" id="answer-slot">???</span>');
+
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
+            shuffledOptions.forEach(option => {
+                const btn = document.createElement('button');
+                btn.className = 'verb-option';
+                btn.textContent = option;
+                btn.addEventListener('click', () => checkAnswer(option, q.correct, btn));
+                optionsContainer.appendChild(btn);
+            });
+
+            // Update helper
+            updateHelper(q.auxiliary, q.verb);
+
+            document.getElementById('question-number').textContent = gameState.currentQuestion + 1;
+            document.getElementById('next-question-btn').style.display = 'none';
+        }
+
+        function checkAnswer(selected, correct, btn) {
+            const answerSlot = document.getElementById('answer-slot');
+            answerSlot.textContent = selected;
+            answerSlot.classList.add('filled');
+
+            document.querySelectorAll('.verb-option').forEach(b => b.classList.add('disabled'));
+
+            if (selected === correct) {
+                btn.classList.add('correct');
+                answerSlot.classList.add('correct');
+                gameState.correctCount++;
+                gameState.streak++;
+                gameState.totalScore += 10 * (1 + Math.floor(gameState.streak / 3));
+
+                addXP(20 + gameState.streak * 5);
+
+                if (gameState.streak > 0 && gameState.streak % 3 === 0) {
+                    showCombo(gameState.streak);
+                }
+
+                createParticles(btn, '⭐');
+            } else {
+                btn.classList.add('wrong');
+                answerSlot.classList.add('wrong');
+                gameState.wrongCount++;
+                gameState.streak = 0;
+
+                // Show correct answer
+                document.querySelectorAll('.verb-option').forEach(b => {
+                    if (b.textContent === correct) {
+                        b.style.background = 'var(--success)';
+                        b.style.borderColor = 'var(--success)';
+                    }
+                });
+            }
+
+            updateStats();
+            document.getElementById('next-question-btn').style.display = 'inline-flex';
+        }
+
+        function updateHelper(auxiliary, verb) {
+            const grid = document.getElementById('helper-grid');
+            const conjugations = auxiliary === 'avoir' ?
+                [
+                    { pronoun: "J'", aux: "ai" },
+                    { pronoun: "Tu", aux: "as" },
+                    { pronoun: "Il/Elle", aux: "a" },
+                    { pronoun: "Nous", aux: "avons" },
+                    { pronoun: "Vous", aux: "avez" },
+                    { pronoun: "Ils/Elles", aux: "ont" }
+                ] :
+                [
+                    { pronoun: "Je", aux: "suis" },
+                    { pronoun: "Tu", aux: "es" },
+                    { pronoun: "Il/Elle", aux: "est" },
+                    { pronoun: "Nous", aux: "sommes" },
+                    { pronoun: "Vous", aux: "êtes" },
+                    { pronoun: "Ils/Elles", aux: "sont" }
+                ];
+
+            grid.innerHTML = conjugations.map(c => `
+                <div class="conjugation-item">
+                    <span class="pronoun">${c.pronoun}</span>
+                    <span class="auxiliary">${c.aux}</span>
+                    <span class="participle">+ participe</span>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('next-question-btn').addEventListener('click', () => {
+            gameState.currentQuestion++;
+            loadQuestion();
+        });
+
+        document.getElementById('skip-btn').addEventListener('click', () => {
+            gameState.streak = 0;
+            gameState.currentQuestion++;
+            loadQuestion();
+            updateStats();
+        });
+
+        // Challenge Mode
+        let challengeTimer;
+        let challengeTime = 60;
+        let challengeScore = 0;
+        let challengeCorrect = 0;
+
+        document.getElementById('start-challenge-btn').addEventListener('click', startChallenge);
+        document.getElementById('retry-challenge').addEventListener('click', startChallenge);
+
+        function startChallenge() {
+            challengeTime = 60;
+            challengeScore = 0;
+            challengeCorrect = 0;
+
+            document.getElementById('challenge-start').classList.add('hidden');
+            document.getElementById('challenge-results').classList.add('hidden');
+            document.getElementById('challenge-game').classList.remove('hidden');
+
+            loadChallengeQuestion();
+            startTimer();
+        }
+
+        function startTimer() {
+            updateTimerDisplay();
+            challengeTimer = setInterval(() => {
+                challengeTime--;
+                updateTimerDisplay();
+
+                if (challengeTime <= 0) {
+                    endChallenge();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            document.getElementById('timer-text').textContent = challengeTime;
+            const progress = (challengeTime / 60) * 220;
+            document.getElementById('timer-progress').style.strokeDashoffset = 220 - progress;
+
+            if (challengeTime <= 10) {
+                document.getElementById('timer-progress').style.stroke = 'var(--danger)';
+            } else {
+                document.getElementById('timer-progress').style.stroke = 'var(--warning)';
+            }
+        }
+
+        function loadChallengeQuestion() {
+            const q = questions[Math.floor(Math.random() * questions.length)];
+
+            document.getElementById('challenge-sentence').innerHTML = q.sentence.replace('___', '<span class="verb-blank">???</span>');
+
+            const optionsContainer = document.getElementById('challenge-options');
+            optionsContainer.innerHTML = '';
+
+            const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
+            shuffledOptions.forEach(option => {
+                const btn = document.createElement('button');
+                btn.className = 'verb-option';
+                btn.textContent = option;
+                btn.addEventListener('click', () => checkChallengeAnswer(option, q.correct, btn));
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkChallengeAnswer(selected, correct, btn) {
+            if (selected === correct) {
+                challengeCorrect++;
+                challengeScore += 50;
+                gameState.streak++;
+                createParticles(btn, '⚡');
+
+                if (gameState.streak % 3 === 0) {
+                    challengeScore += 25; // Bonus
+                    showCombo(gameState.streak);
+                }
+            } else {
+                gameState.streak = 0;
+                btn.classList.add('wrong');
+                setTimeout(() => btn.classList.remove('wrong'), 300);
+            }
+
+            setTimeout(loadChallengeQuestion, 300);
+        }
+
+        function endChallenge() {
+            clearInterval(challengeTimer);
+
+            document.getElementById('challenge-game').classList.add('hidden');
+            document.getElementById('challenge-results').classList.remove('hidden');
+
+            document.getElementById('final-correct').textContent = challengeCorrect;
+            document.getElementById('final-points').textContent = challengeScore;
+
+            if (challengeCorrect >= 10) {
+                document.getElementById('results-emoji').textContent = '🏆';
+                document.getElementById('results-title').textContent = 'LÉGENDAIRE!';
+                showAchievement('🏆', 'Maître du Temps!');
+            } else if (challengeCorrect >= 7) {
+                document.getElementById('results-emoji').textContent = '🌟';
+                document.getElementById('results-title').textContent = 'Excellent!';
+            } else if (challengeCorrect >= 4) {
+                document.getElementById('results-emoji').textContent = '💪';
+                document.getElementById('results-title').textContent = 'Bien joué!';
+            } else {
+                document.getElementById('results-emoji').textContent = '🎯';
+                document.getElementById('results-title').textContent = 'Continue!';
+            }
+
+            gameState.totalScore += challengeScore;
+            addXP(challengeScore);
+            updateStats();
+        }
+
+        // XP and Level System
+        function addXP(amount) {
+            gameState.xp += amount;
+
+            const xpForNextLevel = gameState.level * 100;
+
+            if (gameState.xp >= xpForNextLevel) {
+                gameState.xp -= xpForNextLevel;
+                gameState.level++;
+                showAchievement('🎉', `Niveau ${gameState.level}!`);
+            }
+
+            updateXPDisplay();
+        }
+
+        function updateXPDisplay() {
+            const xpForNextLevel = gameState.level * 100;
+            const percentage = (gameState.xp / xpForNextLevel) * 100;
+
+            document.getElementById('xp-fill').style.width = percentage + '%';
+            document.getElementById('current-xp').textContent = gameState.xp;
+            document.getElementById('max-xp').textContent = xpForNextLevel;
+            document.getElementById('player-level').textContent = gameState.level;
+        }
+
+        function updateStats() {
+            document.getElementById('total-score').textContent = gameState.totalScore;
+            document.getElementById('streak-count').textContent = gameState.streak;
+            document.getElementById('correct-count').textContent = gameState.correctCount;
+            document.getElementById('wrong-count').textContent = gameState.wrongCount;
+        }
+
+        // Visual Effects
+        function createParticles(element, emoji) {
+            const rect = element.getBoundingClientRect();
+
+            for (let i = 0; i < 8; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.textContent = emoji;
+                particle.style.left = rect.left + rect.width / 2 + 'px';
+                particle.style.top = rect.top + 'px';
+                particle.style.fontSize = '1.5em';
+                particle.style.transform = `translate(${(Math.random() - 0.5) * 100}px, 0)`;
+                document.body.appendChild(particle);
+
+                setTimeout(() => particle.remove(), 1000);
+            }
+        }
+
+        function showCombo(streak) {
+            const combo = document.createElement('div');
+            combo.className = 'combo-display';
+            combo.textContent = `🔥 ${streak}x COMBO!`;
+            document.body.appendChild(combo);
+
+            setTimeout(() => combo.remove(), 800);
+        }
+
+        function showAchievement(icon, text) {
+            const existing = document.querySelector('.achievement-popup');
+            if (existing) existing.remove();
+
+            const popup = document.createElement('div');
+            popup.className = 'achievement-popup';
+            popup.innerHTML = `
+                <div class="achievement-icon">${icon}</div>
+                <div class="achievement-text">
+                    <h4>${text}</h4>
+                    <p>Nouveau succès débloqué!</p>
+                </div>
+            `;
+            document.body.appendChild(popup);
+
+            setTimeout(() => popup.remove(), 3500);
+        }
+
+        // Highlight verb click
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('highlight')) {
+                const verb = e.target.dataset.verb;
+                createParticles(e.target, '✨');
+            }
+        });
+
+        // Initialize
+        updateStory();
+        loadQuestion();
+        updateStats();
+        updateXPDisplay();
+    </script>
+</body>
+</html>
